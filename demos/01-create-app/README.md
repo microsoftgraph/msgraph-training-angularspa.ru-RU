@@ -1,0 +1,3 @@
+# <a name="completed-module-create-an-angular-single-page-app"></a>Завершенный модуль: Создание радиального одностраничного приложения
+
+Версия проекта в этом каталоге соответствует завершению руководства путем [создания приложения с одной страницей](https://docs.microsoft.com/graph/training/angular-tutorial?tutorial-step=1)в угловом подсистеме. Если вы используете эту версию проекта, вам необходимо выполнить все остальные руководства, начиная с [регистрации приложения на портале](https://docs.microsoft.com/graph/training/angular-tutorial?tutorial-step=2).
