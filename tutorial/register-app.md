@@ -1,31 +1,25 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-<span data-ttu-id="6ac90-101">В этом упражнении вы создадите регистрацию нового веб-приложения Azure AD с помощью портала реестра приложений (ARP).</span><span class="sxs-lookup"><span data-stu-id="6ac90-101">In this exercise, you will create a new Azure AD web application registration using the Application Registry Portal (ARP).</span></span>
+<span data-ttu-id="82be6-101">В этом упражнении вы создадите регистрацию нового веб-приложения Azure AD с помощью центра администрирования Azure Active Directory.</span><span class="sxs-lookup"><span data-stu-id="82be6-101">In this exercise, you will create a new Azure AD web application registration using the Azure Active Directory admin center.</span></span>
 
-1. <span data-ttu-id="6ac90-102">Откройте браузер и перейдите на [портал регистрации приложений](https://apps.dev.microsoft.com).</span><span class="sxs-lookup"><span data-stu-id="6ac90-102">Open a browser and navigate to the [Application Registration Portal](https://apps.dev.microsoft.com).</span></span> <span data-ttu-id="6ac90-103">Вход с использованием **личной учетной записи** (с учетной записью Майкрософт) или **рабочей или учебНой учетной записи**.</span><span class="sxs-lookup"><span data-stu-id="6ac90-103">Login using a **personal account** (aka: Microsoft Account) or **Work or School Account**.</span></span>
+1. <span data-ttu-id="82be6-102">Откройте браузер и перейдите в [центр администрирования Azure Active Directory](https://aad.portal.azure.com).</span><span class="sxs-lookup"><span data-stu-id="82be6-102">Open a browser and navigate to the [Azure Active Directory admin center](https://aad.portal.azure.com).</span></span> <span data-ttu-id="82be6-103">Вход с использованием **личной учетной записи** (с учетной записью Майкрософт) или **рабочей или учебНой учетной записи**.</span><span class="sxs-lookup"><span data-stu-id="82be6-103">Login using a **personal account** (aka: Microsoft Account) or **Work or School Account**.</span></span>
 
-1. <span data-ttu-id="6ac90-104">В верхней части страницы выберите **Добавить приложение** .</span><span class="sxs-lookup"><span data-stu-id="6ac90-104">Select **Add an app** at the top of the page.</span></span>
+1. <span data-ttu-id="82be6-104">Выберите **Azure Active Directory** в левой панели навигации, а затем выберите **Регистрация приложений (Предварительная версия)** в разделе **Управление**.</span><span class="sxs-lookup"><span data-stu-id="82be6-104">Select **Azure Active Directory** in the left-hand navigation, then select **App registrations (Preview)** under **Manage**.</span></span>
 
-    > [!NOTE]
-    > <span data-ttu-id="6ac90-105">Если на странице отображается несколько кнопок **Добавить приложение** , выберите ту, которая соответствует списку **приложений** для конвергенции.</span><span class="sxs-lookup"><span data-stu-id="6ac90-105">If you see more than one **Add an app** button on the page, select the one that corresponds to the **Converged apps** list.</span></span>
+    ![<span data-ttu-id="82be6-105">Снимок экрана с регистрациями приложений</span><span class="sxs-lookup"><span data-stu-id="82be6-105">A screenshot of the App registrations</span></span> ](./images/aad-portal-app-registrations.png)
 
-1. <span data-ttu-id="6ac90-106">На странице **Регистрация приложения** задайте для параметра **имя приложения** значение **учебник радиальный график** и выберите **создать**.</span><span class="sxs-lookup"><span data-stu-id="6ac90-106">On the **Register your application** page, set the **Application Name** to **Angular Graph Tutorial** and select **Create**.</span></span>
+1. <span data-ttu-id="82be6-106">Нажмите кнопку **создать регистрацию**.</span><span class="sxs-lookup"><span data-stu-id="82be6-106">Select **New registration**.</span></span> <span data-ttu-id="82be6-107">На странице **Регистрация приложения** задайте указанные ниже значения.</span><span class="sxs-lookup"><span data-stu-id="82be6-107">On the **Register an application** page, set the values as follows.</span></span>
 
-    ![Снимок экрана: создание нового приложения на веб-сайте портала регистрации приложений](./images/arp-create-app-01.png)
+    - <span data-ttu-id="82be6-108">Задайте \*\*\*\* для `Angular Graph Tutorial`параметра Name значение.</span><span class="sxs-lookup"><span data-stu-id="82be6-108">Set **Name** to `Angular Graph Tutorial`.</span></span>
+    - <span data-ttu-id="82be6-109">Установите **Поддерживаемые типы учетных** записей для **учетных записей в любом организационном каталоге и личных учетНых записях Майкрософт**.</span><span class="sxs-lookup"><span data-stu-id="82be6-109">Set **Supported account types** to **Accounts in any organizational directory and personal Microsoft accounts**.</span></span>
+    - <span data-ttu-id="82be6-110">В разделе **URI перенаправления**установите первый раскрывающийся список `Web` и присвойте ему значение `http://localhost:4200`.</span><span class="sxs-lookup"><span data-stu-id="82be6-110">Under **Redirect URI**, set the first drop-down to `Web` and set the value to `http://localhost:4200`.</span></span>
 
-1. <span data-ttu-id="6ac90-108">На странице **Регистрация учебника** по радиальным графикам в разделе **свойства** скопируйте **идентификатор приложения** так, как он понадобится позже.</span><span class="sxs-lookup"><span data-stu-id="6ac90-108">On the **Angular Graph Tutorial Registration** page, under the **Properties** section, copy the **Application Id** as you will need it later.</span></span>
+    ![Снимок страницы "регистрация приложения"](./images/aad-register-an-app.png)
 
-    ![Снимок экрана с ИДЕНТИФИКАТОРом только что созданного приложения](./images/arp-create-app-02.png)
+1. <span data-ttu-id="82be6-112">Выберите **регистр**.</span><span class="sxs-lookup"><span data-stu-id="82be6-112">Choose **Register**.</span></span> <span data-ttu-id="82be6-113">На странице **учебника** по радиальному графику СКОПИРУЙТЕ значение **идентификатора Application (Client)** и сохраните его, он понадобится на следующем шаге.</span><span class="sxs-lookup"><span data-stu-id="82be6-113">On the **Angular Graph Tutorial** page, copy the value of the **Application (client) ID** and save it, you will need it in the next step.</span></span>
 
-1. <span data-ttu-id="6ac90-110">ПроКрутите окно вниз до раздела **платформы** .</span><span class="sxs-lookup"><span data-stu-id="6ac90-110">Scroll down to the **Platforms** section.</span></span>
+    ![Снимок экрана с ИДЕНТИФИКАТОРом приложения для новой регистрации приложения](./images/aad-application-id.png)
 
-    1. <span data-ttu-id="6ac90-111">Нажмите кнопку **Добавить платформу**.</span><span class="sxs-lookup"><span data-stu-id="6ac90-111">Select **Add Platform**.</span></span>
-    1. <span data-ttu-id="6ac90-112">В диалоговом окне **Добавление платформы** выберите **веб**.</span><span class="sxs-lookup"><span data-stu-id="6ac90-112">In the **Add Platform** dialog, select **Web**.</span></span>
+1. <span data-ttu-id="82be6-115">Выберите пункт **Проверка** подлинности в разделе **Управление**.</span><span class="sxs-lookup"><span data-stu-id="82be6-115">Select **Authentication** under **Manage**.</span></span> <span data-ttu-id="82be6-116">НаХождение неЯвного раздела **предоставления** и включение **маркеров доступа** и **маркеров ID**.</span><span class="sxs-lookup"><span data-stu-id="82be6-116">Locate the **Implicit grant** section and enable **Access tokens** and **ID tokens**.</span></span> <span data-ttu-id="82be6-117">Нажмите кнопку **Сохранить**.</span><span class="sxs-lookup"><span data-stu-id="82be6-117">Choose **Save**.</span></span>
 
-        ![Снимок экрана: создание платформы для приложения](./images/arp-create-app-03.png)
-
-    1. <span data-ttu-id="6ac90-114">В поле **веб-** платформа введите `http://localhost:4200` **URL-адреса перенаправления**.</span><span class="sxs-lookup"><span data-stu-id="6ac90-114">In the **Web** platform box, enter `http://localhost:4200` for the **Redirect URLs**.</span></span>
-
-        ![Снимок экрана: недавно добавленная веб-платформа для приложения](./images/arp-create-app-04.png)
-
-1. <span data-ttu-id="6ac90-116">ПроКрутите страницу вниз и выберите команду **сохранить**.</span><span class="sxs-lookup"><span data-stu-id="6ac90-116">Scroll to the bottom of the page and select **Save**.</span></span>
+    ![Снимок экрана с неЯвным разделом предоставления](./images/aad-implicit-grant.png)
