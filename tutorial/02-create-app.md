@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-Откройте интерфейс командной строки (CLI), перейдите к каталогу, в котором у вас есть права на создание файлов, и выполните следующие команды, чтобы установить угловую утилиту [CLI](https://www.npmjs.com/package/@angular/cli) и создать новое угловое приложение.
+Откройте интерфейс командной строки (CLI), перейдите к каталогу, в котором у вас есть права на создание файлов, и выполните следующие команды, чтобы установить [угловую](https://www.npmjs.com/package/@angular/cli) утилиту CLI и создать новое угловое приложение.
 
 ```Shell
 npm install -g @angular/cli
@@ -28,7 +28,7 @@ ng serve --open
 - [NG — начальная](https://github.com/ng-bootstrap/ng-bootstrap) загрузка для использования компонентов начальной загрузки из радиальной.
 - [угловой фонтавесоме](https://github.com/FortAwesome/angular-fontawesome) используется для использования значков Фонтавесоме в радиальном.
 - [фонтавесоме – SVG — основной](https://github.com/FortAwesome/Font-Awesome), [бесплатный — SVG — значки](https://github.com/FortAwesome/Font-Awesome)и [свободные сплошные SVG значки](https://github.com/FortAwesome/Font-Awesome) для значков фонтавесоме, используемых в примере.
-- [](https://github.com/moment/moment) время для форматирования даты и времени.
+- [время для форматирования](https://github.com/moment/moment) даты и времени.
 - [msal — угловой](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/README.md) для проверки подлинности в Azure Active Directory и получения маркеров доступа.
 - [рксжс — совместимость](https://github.com/ReactiveX/rxjs/tree/master/compat), обязательный для `msal-angular` пакета.
 - [Microsoft — Graph — клиент](https://github.com/microsoftgraph/msgraph-sdk-javascript) для совершения звонков в Microsoft Graph.
@@ -36,10 +36,10 @@ ng serve --open
 Выполните следующую команду в командной панели CLI.
 
 ```Shell
-npm install bootstrap@4.3.1 @fortawesome/angular-fontawesome@0.3.0 @fortawesome/fontawesome-svg-core@1.2.17
-npm install @fortawesome/free-regular-svg-icons@5.8.1 @fortawesome/free-solid-svg-icons@5.8.1
-npm install moment@2.24.0 moment-timezone@0.5.25 @ng-bootstrap/ng-bootstrap@4.1.2
-npm install @azure/msal-angular@0.1.2 rxjs-compat@6.5.1 @microsoft/microsoft-graph-client@1.6.0
+npm install bootstrap@4.3.1 @fortawesome/angular-fontawesome@0.5.0 @fortawesome/fontawesome-svg-core@1.2.22
+npm install @fortawesome/free-regular-svg-icons@5.10.2 @fortawesome/free-solid-svg-icons@5.10.2
+npm install moment@2.24.0 moment-timezone@0.5.26 @ng-bootstrap/ng-bootstrap@5.1.1
+npm install @azure/msal-angular@0.1.2 rxjs-compat@6.5.3 @microsoft/microsoft-graph-client@1.7.0
 ```
 
 ## <a name="design-the-app"></a>Проектирование приложения
