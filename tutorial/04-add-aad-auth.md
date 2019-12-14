@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-В этом упражнении вы будете расширяем приложение из предыдущего упражнения для поддержки проверки подлинности с помощью Azure AD. Это необходимо для получения необходимого маркера доступа OAuth для вызова Microsoft Graph. На этом этапе вы интегрируете [библиотеку проверки](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/README.md) подлинности (Майкрософт) для радиальной интеграции в приложение.
+В этом упражнении вы будете расширяем приложение из предыдущего упражнения для поддержки проверки подлинности с помощью Azure AD. Это необходимо для получения необходимого маркера доступа OAuth для вызова Microsoft Graph. На этом этапе вы интегрируете [библиотеку проверки подлинности (Майкрософт) для радиальной](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/README.md) интеграции в приложение.
 
 Создайте новый файл в `./src` каталоге `oauth.ts` и добавьте указанный ниже код.
 
@@ -126,7 +126,7 @@ export class AuthService {
 - Добавьте `import { AuthService } from '../auth.service';` в начало файла.
 - Удалите свойства `authenticated` и `user` свойства из класса и удалите код, который задает их в `ngOnInit`.
 - Чтобы вставить `AuthService` , добавьте следующий параметр `constructor`:. `private authService: AuthService`
-- Замените существующий `signIn` метод следующим:
+- Замените существующий метод `signIn` указанным ниже кодом.
 
     ```TypeScript
     async signIn(): Promise<void> {
@@ -134,7 +134,7 @@ export class AuthService {
     }
     ```
 
-- Замените существующий `signOut` метод следующим:
+- Замените существующий метод `signOut` указанным ниже кодом.
 
     ```TypeScript
     signOut(): void {
@@ -278,6 +278,13 @@ private async getUser(): Promise<User> {
 
   return user;
 }
+```
+
+В `getAccessToken` методе, который добавляет оповещение для отображения маркера доступа, в методе необходимо указать и удалить приведенный ниже код.
+
+```TypeScript
+// Temporary to display token in an error box
+if (result) this.alertsService.add('Token acquired', result);
 ```
 
 В `signIn` методе откройте и удалите приведенный ниже код.

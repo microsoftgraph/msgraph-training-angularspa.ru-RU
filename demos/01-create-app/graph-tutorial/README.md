@@ -1,6 +1,6 @@
-# <a name="graphtutorial"></a>Графтуториал
+# <a name="graphtutorial"></a>графтуториал
 
-Этот проект был создан с помощью 7.1.1 Version [CLI](https://github.com/angular/angular-cli) .
+Этот проект был создан с помощью 8.3.20 Version [CLI](https://github.com/angular/angular-cli) .
 
 ## <a name="development-server"></a>Сервер разработки
 
@@ -20,7 +20,7 @@
 
 ## <a name="running-end-to-end-tests"></a>Выполнение сквозных тестов
 
-Выполните `ng e2e` команду, чтобы выполнить сквозные тесты с помощью метода [](http://www.protractortest.org/).
+Выполните `ng e2e` команду, чтобы выполнить сквозные тесты [с помощью метода](http://www.protractortest.org/).
 
 ## <a name="further-help"></a>Дальнейшая Справка
 
