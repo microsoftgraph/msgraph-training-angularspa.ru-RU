@@ -2,327 +2,160 @@
 
 В этом упражнении вы будете расширяем приложение из предыдущего упражнения для поддержки проверки подлинности с помощью Azure AD. Это необходимо для получения необходимого маркера доступа OAuth для вызова Microsoft Graph. На этом этапе вы интегрируете [библиотеку проверки подлинности (Майкрософт) для радиальной](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/README.md) интеграции в приложение.
 
-Создайте новый файл в `./src` каталоге `oauth.ts` и добавьте указанный ниже код.
+1. Создайте новый файл в `./src` каталоге `oauth.ts` и добавьте указанный ниже код.
 
-```TypeScript
-export const OAuthSettings = {
-  appId: 'YOUR_APP_ID_HERE',
-  scopes: [
-    "user.read",
-    "calendars.read"
-  ]
-};
-```
+    :::code language="typescript" source="../demo/graph-tutorial/src/oauth.ts.example":::
 
-Замените `YOUR_APP_ID_HERE` идентификатором приложения на портале регистрации приложений.
+    Замените `YOUR_APP_ID_HERE` идентификатором приложения на портале регистрации приложений.
 
-> [!IMPORTANT]
-> Если вы используете систему управления версиями (например, Git), то теперь мы бы не могли исключить `oauth.ts` файл из системы управления версиями, чтобы избежать случайной утечки идентификатора приложения.
+    > [!IMPORTANT]
+    > Если вы используете систему управления версиями (например, Git), то теперь мы бы не могли исключить `oauth.ts` файл из системы управления версиями, чтобы избежать случайной утечки идентификатора приложения.
 
-Откройте `./src/app/app.module.ts` и добавьте приведенные `import` ниже операторы в начало файла.
+1. Откройте `./src/app/app.module.ts` и добавьте приведенные `import` ниже операторы в начало файла.
 
-```TypeScript
-import { MsalModule } from '@azure/msal-angular';
-import { OAuthSettings } from '../oauth';
-```
+    ```TypeScript
+    import { MsalModule } from '@azure/msal-angular';
+    import { OAuthSettings } from '../oauth';
+    ```
 
-Затем добавьте `MsalModule` к `imports` массиву внутри `@NgModule` объявления и инициализируйте его с помощью идентификатора приложения.
+1. Добавьте в `MsalModule` `imports` массив внутри `@NgModule` объявления и инициализируйте его с помощью идентификатора приложения.
 
-```TypeScript
-imports: [
-  BrowserModule,
-  AppRoutingModule,
-  NgbModule,
-  FontAwesomeModule,
-  MsalModule.forRoot({
-    clientID: OAuthSettings.appId
-  })
-],
-```
+    :::code language="typescript" source="../demo/graph-tutorial/src/app/app.module.ts" id="imports":::
 
 ## <a name="implement-sign-in"></a>Реализация входа
 
-Сначала необходимо определить простой `User` класс для хранения сведений о пользователе, который отображается в приложении. Создайте новый файл в `./src/app` папке с именем `user.ts` и добавьте приведенный ниже код.
+В этом разделе вы создадите службу проверки подлинности и выполните вход и выход.
 
-```TypeScript
-export class User {
-  displayName: string;
-  email: string;
-  avatar: string;
-}
-```
+1. Выполните следующую команду в командной панели CLI.
 
-Теперь создайте службу проверки подлинности. Создав службу для этого, вы можете легко вставить ее в любые компоненты, которым необходим доступ к методам проверки подлинности. Выполните следующую команду в командной панели CLI.
-
-```Shell
-ng generate service auth
-```
-
-После завершения выполнения команды откройте `./src/app/auth.service.ts` файл и замените его содержимое приведенным ниже кодом.
-
-```TypeScript
-import { Injectable } from '@angular/core';
-import { MsalService } from '@azure/msal-angular';
-
-import { AlertsService } from './alerts.service';
-import { OAuthSettings } from '../oauth';
-import { User } from './user';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthService {
-  public authenticated: boolean;
-  public user: User;
-
-  constructor(
-    private msalService: MsalService,
-    private alertsService: AlertsService) {
-
-    this.authenticated = false;
-    this.user = null;
-  }
-
-  // Prompt the user to sign in and
-  // grant consent to the requested permission scopes
-  async signIn(): Promise<void> {
-    let result = await this.msalService.loginPopup(OAuthSettings.scopes)
-      .catch((reason) => {
-        this.alertsService.add('Login failed', JSON.stringify(reason, null, 2));
-      });
-
-    if (result) {
-      this.authenticated = true;
-      // Temporary placeholder
-      this.user = new User();
-      this.user.displayName = "Adele Vance";
-      this.user.email = "AdeleV@contoso.com";
-    }
-  }
-
-  // Sign out
-  signOut(): void {
-    this.msalService.logout();
-    this.user = null;
-    this.authenticated = false;
-  }
-
-  // Silently request an access token
-  async getAccessToken(): Promise<string> {
-    let result = await this.msalService.acquireTokenSilent(OAuthSettings.scopes)
-      .catch((reason) => {
-        this.alertsService.add('Get token failed', JSON.stringify(reason, null, 2));
-      });
-
-    // Temporary to display token in an error box
-    if (result) this.alertsService.add('Token acquired', result);
-    return result;
-  }
-}
-```
-
-Теперь, когда у вас есть служба проверки подлинности, ее можно вставить в компоненты, которые выполняют вход в систему. Начните с `NavBarComponent`. Откройте `./src/app/nav-bar/nav-bar.component.ts` файл и внесите следующие изменения.
-
-- Добавьте `import { AuthService } from '../auth.service';` в начало файла.
-- Удалите свойства `authenticated` и `user` свойства из класса и удалите код, который задает их в `ngOnInit`.
-- Чтобы вставить `AuthService` , добавьте следующий параметр `constructor`:. `private authService: AuthService`
-- Замените существующий метод `signIn` указанным ниже кодом.
-
-    ```TypeScript
-    async signIn(): Promise<void> {
-      await this.authService.signIn();
-    }
+    ```Shell
+    ng generate service auth
     ```
 
-- Замените существующий метод `signOut` указанным ниже кодом.
+    Создав службу для этого, вы можете легко вставить ее в любые компоненты, которым необходим доступ к методам проверки подлинности.
+
+1. После завершения выполнения команды откройте `./src/app/auth.service.ts` файл и замените его содержимое приведенным ниже кодом.
 
     ```TypeScript
-    signOut(): void {
-      this.authService.signOut();
-    }
-    ```
+    import { Injectable } from '@angular/core';
+    import { MsalService } from '@azure/msal-angular';
 
-Когда все будет готово, код должен выглядеть так, как показано ниже.
+    import { AlertsService } from './alerts.service';
+    import { OAuthSettings } from '../oauth';
+    import { User } from './user';
 
-```TypeScript
-import { Component, OnInit } from '@angular/core';
+    @Injectable({
+      providedIn: 'root'
+    })
 
-import { AuthService } from '../auth.service';
+    export class AuthService {
+      public authenticated: boolean;
+      public user: User;
 
-@Component({
-  selector: 'app-nav-bar',
-  templateUrl: './nav-bar.component.html',
-  styleUrls: ['./nav-bar.component.css']
-})
-export class NavBarComponent implements OnInit {
+      constructor(
+        private msalService: MsalService,
+        private alertsService: AlertsService) {
 
-  // Should the collapsed nav show?
-  showNav: boolean;
+        this.authenticated = false;
+        this.user = null;
+      }
 
-  constructor(private authService: AuthService) { }
+      // Prompt the user to sign in and
+      // grant consent to the requested permission scopes
+      async signIn(): Promise<void> {
+        let result = await this.msalService.loginPopup(OAuthSettings)
+          .catch((reason) => {
+            this.alertsService.add('Login failed', JSON.stringify(reason, null, 2));
+          });
 
-  ngOnInit() {
-    this.showNav = false;
-  }
+        if (result) {
+          this.authenticated = true;
+          // Temporary placeholder
+          this.user = new User();
+          this.user.displayName = "Adele Vance";
+          this.user.email = "AdeleV@contoso.com";
+        }
+      }
 
-  // Used by the Bootstrap navbar-toggler button to hide/show
-  // the nav in a collapsed state
-  toggleNavBar(): void {
-    this.showNav = !this.showNav;
-  }
+      // Sign out
+      signOut(): void {
+        this.msalService.logout();
+        this.user = null;
+        this.authenticated = false;
+      }
 
-  async signIn(): Promise<void> {
-    await this.authService.signIn();
-  }
+      // Silently request an access token
+      async getAccessToken(): Promise<string> {
+        let result = await this.msalService.acquireTokenSilent(OAuthSettings)
+          .catch((reason) => {
+            this.alertsService.add('Get token failed', JSON.stringify(reason, null, 2));
+          });
 
-  signOut(): void {
-    this.authService.signOut();
-  }
-}
-```
-
-Так как вы `authenticated` удалили `user` свойства и свойства для класса, вам также потребуется обновить `./src/app/nav-bar/nav-bar.component.html` файл. Откройте этот файл и внесите следующие изменения.
-
-- Замените все экземпляры объекта `authenticated` на объект `authService.authenticated`.
-- Замените все вхождения `user` на `authService.user`.
-
-Далее обновите `HomeComponent` класс. Внесите в `NavBarComponent` класс все те же изменения `./src/app/home/home.component.ts` , которые были внесены в класс со следующими исключениями.
-
-- В `HomeComponent` классе нет `signOut` метода.
-- Замените `signIn` метод немного другой версией. Этот код вызывает `getAccessToken` получение маркера доступа, который сейчас будет выводить маркер в виде ошибки.
-
-    ```TypeScript
-    async signIn(): Promise<void> {
-      await this.authService.signIn();
-
-      // Temporary to display the token
-      if (this.authService.authenticated) {
-        let token = await this.authService.getAccessToken();
+        if (result) {
+          // Temporary to display token in an error box
+          this.alertsService.add('Token acquired', result.accessToken);
+          return result.accessToken;
+        }
+        return null;
       }
     }
     ```
 
-Когда вы закончите, файл должен выглядеть так, как показано ниже.
+1. Откройте `./src/app/nav-bar/nav-bar.component.ts` файл и замените его содержимое на приведенный ниже код.
 
-```TypeScript
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
+    :::code language="typescript" source="../demo/graph-tutorial/src/app/nav-bar/nav-bar.component.ts" id="navBarSnippet" highlight="3,15-22,24,26-28,36-38,40-42":::
 
-@Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
-})
-export class HomeComponent implements OnInit {
+1. Откройте`./src/app/home/home.component.ts` и замените его содержимое приведенным ниже.
 
-  constructor(private authService: AuthService) { }
-
-  ngOnInit() {
-  }
-
-  async signIn(): Promise<void> {
-    await this.authService.signIn();
-
-    // Temporary to display the token
-    if (this.authService.authenticated) {
-      let token = await this.authService.getAccessToken();
-    }
-  }
-}
-```
-
-Наконец, выполните те же замены, что и `./src/app/home/home.component.html` в панели навигации.
+    :::code language="typescript" source="snippets/snippets.ts" id="homeSnippet" highlight="3,12-19,21,23,25-27":::
 
 Сохраните изменения и обновите браузер. Нажмите кнопку " **щелкните здесь, чтобы войти** ", а вы будете перенаправлены на `https://login.microsoftonline.com`. Войдите с помощью учетной записи Майкрософт и согласия с запрошенными разрешениями. Страница приложения должна обновляться, отображая маркер.
 
 ### <a name="get-user-details"></a>Получение сведений о пользователе
 
-Теперь служба проверки подлинности устанавливает постоянные значения для отображаемого имени пользователя и адреса электронной почты. Теперь, когда у вас есть маркер доступа, вы можете получить сведения о пользователях из Microsoft Graph, чтобы эти значения соответствовали текущему пользователю. Откройте `./src/app/auth.service.ts` и добавьте приведенный `import` ниже оператор в начало файла.
+Теперь служба проверки подлинности устанавливает постоянные значения для отображаемого имени пользователя и адреса электронной почты. Теперь, когда у вас есть маркер доступа, вы можете получить сведения о пользователях из Microsoft Graph, чтобы эти значения соответствовали текущему пользователю.
 
-```TypeScript
-import { Client } from '@microsoft/microsoft-graph-client';
-```
+1. Откройте `./src/app/auth.service.ts` и добавьте приведенный `import` ниже оператор в начало файла.
 
-Добавьте к классу `AuthService` новую функцию с именем `getUser`.
+    ```TypeScript
+    import { Client } from '@microsoft/microsoft-graph-client';
+    ```
 
-```TypeScript
-private async getUser(): Promise<User> {
-  if (!this.authenticated) return null;
+1. Добавьте к классу `AuthService` новую функцию с именем `getUser`.
 
-  let graphClient = Client.init({
-    // Initialize the Graph client with an auth
-    // provider that requests the token from the
-    // auth service
-    authProvider: async(done) => {
-      let token = await this.getAccessToken()
-        .catch((reason) => {
-          done(reason, null);
-        });
+    :::code language="typescript" source="../demo/graph-tutorial/src/app/auth.service.ts" id="getUserSnippet":::
 
-      if (token)
-      {
-        done(null, token);
-      } else {
-        done("Could not get an access token", null);
-      }
-    }
-  });
+1. В `getAccessToken` методе, который добавляет оповещение для отображения маркера доступа, в методе необходимо указать и удалить приведенный ниже код.
 
-  // Get the user from Graph (GET /me)
-  let graphUser = await graphClient.api('/me').get();
+    ```TypeScript
+    // Temporary to display token in an error box
+    this.alertsService.add('Token acquired', result);
+    ```
 
-  let user = new User();
-  user.displayName = graphUser.displayName;
-  // Prefer the mail property, but fall back to userPrincipalName
-  user.email = graphUser.mail || graphUser.userPrincipalName;
+1. В `signIn` методе откройте и удалите приведенный ниже код.
 
-  return user;
-}
-```
+    ```TypeScript
+    // Temporary placeholder
+    this.user = new User();
+    this.user.displayName = "Adele Vance";
+    this.user.email = "AdeleV@contoso.com";
+    ```
 
-В `getAccessToken` методе, который добавляет оповещение для отображения маркера доступа, в методе необходимо указать и удалить приведенный ниже код.
+1. Вместо этого добавьте следующий код.
 
-```TypeScript
-// Temporary to display token in an error box
-if (result) this.alertsService.add('Token acquired', result);
-```
+    ```TypeScript
+    this.user = await this.getUser();
+    ```
 
-В `signIn` методе откройте и удалите приведенный ниже код.
+    Этот новый код использует пакет SDK Microsoft Graph для получения сведений о пользователе, а затем создает `User` объект с использованием значений, возвращенных вызовом API.
 
-```TypeScript
-// Temporary placeholder
-this.user = new User();
-this.user.displayName = "Adele Vance";
-this.user.email = "AdeleV@contoso.com";
-```
+1. Измените `AuthService` класс `constructor` для проверки того, что пользователь уже вошел в систему, и загрузит сведения о нем, если это так. Замените существующий `constructor` ниже.
 
-Вместо этого добавьте следующий код.
+    :::code language="typescript" source="../demo/graph-tutorial/src/app/auth.service.ts" id="constructorSnippet" highlight="5-6":::
 
-```TypeScript
-this.user = await this.getUser();
-```
+1. Удалите временный код из `HomeComponent` класса. Откройте `./src/app/home/home.component.ts` файл и замените существующую `signIn` функцию на приведенную ниже.
 
-Этот новый код использует пакет SDK Microsoft Graph для получения сведений о пользователе, а затем создает `User` объект с использованием значений, возвращенных вызовом API.
-
-Теперь измените `AuthService` класс `constructor` , чтобы проверить, что пользователь уже вошел в систему, и загрузит сведения о нем, если это так. Замените существующий `constructor` ниже.
-
-```TypeScript
-constructor(
-  private msalService: MsalService,
-  private alertsService: AlertsService) {
-
-  this.authenticated = this.msalService.getUser() != null;
-  this.getUser().then((user) => {this.user = user});
-}
-```
-
-Наконец, удалите временный код из `HomeComponent` класса. Откройте `./src/app/home/home.component.ts` файл и замените существующую `signIn` функцию на приведенную ниже.
-
-```TypeScript
-async signIn(): Promise<void> {
-  await this.authService.signIn();
-}
-```
+    :::code language="typescript" source="../demo/graph-tutorial/src/app/home/home.component.ts" id="signInSnippet" highlight="5-6":::
 
 Теперь, если вы сохраните изменения и запустите приложение, после входа на домашнюю страницу необходимо изменить пользовательский интерфейс, чтобы указать, что вы вошли в систему.
 
