@@ -1,6 +1,6 @@
 # <a name="graphtutorial"></a>графтуториал
 
-Этот проект был создан с помощью 9.0.6 Version [CLI](https://github.com/angular/angular-cli) .
+Этот проект был создан с помощью 10.1.7 Version [CLI](https://github.com/angular/angular-cli) .
 
 ## <a name="development-server"></a>Сервер разработки
 
@@ -8,7 +8,7 @@
 
 ## <a name="code-scaffolding"></a>Формирование шаблонов кода
 
-Запустите `ng generate component component-name` , чтобы создать новый компонент. Вы также можете использовать `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Запустите `ng generate component component-name` , чтобы создать новый компонент. Вы также можете использовать `ng generate directive|pipe|service|class|guard|interface|enum|module` .
 
 ## <a name="build"></a>Сборка
 
@@ -20,8 +20,8 @@
 
 ## <a name="running-end-to-end-tests"></a>Выполнение сквозных тестов
 
-Выполните `ng e2e` команду, чтобы выполнить сквозные тесты [с помощью метода](http://www.protractortest.org/).
+Выполните команду `ng e2e` , чтобы выполнить сквозные тесты с помощью метода [Protractor](http://www.protractortest.org/).
 
 ## <a name="further-help"></a>Дальнейшая Справка
 
-Для получения дополнительных сведений об использовании `ng help` угловой панели CLI или ознакомьтесь со статьей сведений о РАСПОЛОЖЕНИИ [утилиты CLI](https://github.com/angular/angular-cli/blob/master/README.md).
+Для получения дополнительных сведений об использовании угловой панели CLI или ознакомьтесь со статьей сведений о расположении `ng help` [утилиты CLI](https://github.com/angular/angular-cli/blob/master/README.md).
