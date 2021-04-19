@@ -1,18 +1,18 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
-В этом упражнении вы добавите Microsoft Graph в приложение. В этом приложении для совершения вызовов в Microsoft Graph будет использоваться [Клиентская библиотека Microsoft](https://github.com/microsoftgraph/msgraph-sdk-javascript) Graph.
+В этом упражнении вы будете включать Microsoft Graph в приложение. Для этого приложения вы будете использовать [библиотеку microsoft-graph-client](https://github.com/microsoftgraph/msgraph-sdk-javascript) для звонков в Microsoft Graph.
 
 ## <a name="get-calendar-events-from-outlook"></a>Получение событий календаря из Outlook
 
-1. Добавление новой службы для хранения всех вызовов графов. Выполните следующую команду в командной панели CLI.
+1. Добавьте новую службу для проведения всех вызовов Graph. Запустите следующую команду в CLI.
 
     ```Shell
     ng generate service graph
     ```
 
-    Как и при работе со службой проверки подлинности, созданной ранее, создание службы позволяет вставить ее в любой компонент, которому необходим доступ к Microsoft Graph.
+    Как и в созданной ранее службе проверки подлинности, создание службы позволяет вводить ее в любые компоненты, которые нуждаются в доступе к Microsoft Graph.
 
-1. После выполнения команды откройте **./СРК/АПП/граф.сервице.ТС** и замените ее содержимое на следующий.
+1. После завершения команды откройте **./src/app/graph.service.ts** и замените содержимое следующим.
 
     ```typescript
     import { Injectable } from '@angular/core';
@@ -37,7 +37,7 @@
         this.graphClient = Client.init({
           authProvider: async (done) => {
             // Get the token from the auth service
-            let token = await this.authService.getAccessToken()
+            const token = await this.authService.getAccessToken()
               .catch((reason) => {
                 done(reason, null);
               });
@@ -52,13 +52,13 @@
         });
       }
 
-      async getCalendarView(start: string, end: string, timeZone: string): Promise<MicrosoftGraph.Event[]> {
+      async getCalendarView(start: string, end: string, timeZone: string): Promise<MicrosoftGraph.Event[] | undefined> {
         try {
           // GET /me/calendarview?startDateTime=''&endDateTime=''
           // &$select=subject,organizer,start,end
           // &$orderby=start/dateTime
           // &$top=50
-          let result =  await this.graphClient
+          const result =  await this.graphClient
             .api('/me/calendarview')
             .header('Prefer', `outlook.timezone="${timeZone}"`)
             .query({
@@ -74,43 +74,50 @@
         } catch (error) {
           this.alertsService.addError('Could not get events', JSON.stringify(error, null, 2));
         }
+        return undefined;
       }
     }
     ```
 
-    Рассмотрите, что делает этот код.
+    Давайте посмотрим, что делает этот код.
 
     - Он инициализирует клиент Graph в конструкторе для службы.
-    - Он реализует `getCalendarView` функцию, использующую клиент Graph, следующим образом:
-      - URL-адрес, который будет вызываться — это `/me/calendarview` .
-      - `header`Метод включает `Prefer: outlook.timezone` заголовок, который приводит к тому, что время начала и окончания возвращаемых событий будет в предпочтительном часовом поясе пользователя.
-      - `query`Метод добавляет `startDateTime` `endDateTime` Параметры и определяет окно представления календаря.
-      - `select`Метод ограничит поля, возвращаемые для каждого события, только теми, которые будут реально использоваться в представлении.
-      - `orderby`Метод сортирует результаты по времени начала.
+    - Он реализует `getCalendarView` функцию, использующую клиент Graph следующим образом:
+      - Вызывается URL-адрес `/me/calendarview`.
+      - Метод включает заглавную, из-за чего время начала и окончания возвращаемых событий должно быть в предпочтительном часовом `header` `Prefer: outlook.timezone` поясе пользователя.
+      - Метод добавляет параметры и добавляет `query` окно времени для представления `startDateTime` `endDateTime` календаря.
+      - Метод ограничивает поля, возвращенные для каждого события, только теми, которые будут `select` фактически использовать представление.
+      - Метод `orderby` сортировать результаты по времени начала.
 
-1. Создайте угловой компонент, чтобы вызвать этот новый метод и отобразить результаты вызова. Выполните следующую команду в командной панели CLI.
+1. Создайте компонент Angular для вызова этого нового метода и отображения результатов вызова. Запустите следующую команду в CLI.
 
     ```Shell
     ng generate component calendar
     ```
 
-1. После завершения команды добавьте компонент в `routes` массив в файле **./СРК/АПП/АПП-раутинг.модуле.ТС**.
+1. После завершения команды добавьте компонент в массив `routes` **в ./src/app/app-routing.module.ts**.
 
     ```typescript
     import { CalendarComponent } from './calendar/calendar.component';
 
     const routes: Routes = [
       { path: '', component: HomeComponent },
-      { path: 'calendar', component: CalendarComponent }
+      { path: 'calendar', component: CalendarComponent },
     ];
     ```
 
-1. Откройте **/СРК/АПП/календар/календар.компонент.ТС** и замените его содержимое приведенным ниже.
+1. Откройте **./tsconfig.jsи** добавьте в объект следующее `compilerOptions` свойство.
+
+    ```json
+    "resolveJsonModule": true
+    ```
+
+1. Откройте **./src/app/calendar/calendar.component.ts** и замените содержимое на следующее.
 
     ```typescript
     import { Component, OnInit } from '@angular/core';
     import * as moment from 'moment-timezone';
-    import { findOneIana } from 'windows-iana';
+    import { findIana } from 'windows-iana';
     import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 
     import { AuthService } from '../auth.service';
@@ -124,7 +131,7 @@
     })
     export class CalendarComponent implements OnInit {
 
-      public events: MicrosoftGraph.Event[];
+      public events?: MicrosoftGraph.Event[];
 
       constructor(
         private authService: AuthService,
@@ -133,8 +140,8 @@
 
       ngOnInit() {
         // Convert the user's timezone to IANA format
-        const ianaName = findOneIana(this.authService.user.timeZone);
-        const timeZone = ianaName!.valueOf() || this.authService.user.timeZone;
+        const ianaName = findIana(this.authService.user?.timeZone ?? 'UTC');
+        const timeZone = ianaName![0].valueOf() || this.authService.user?.timeZone || 'UTC';
 
         // Get midnight on the start of the current week in the user's timezone,
         // but in UTC. For example, for Pacific Standard Time, the time value would be
@@ -145,7 +152,7 @@
         this.graphService.getCalendarView(
           startOfWeek.format(),
           endOfWeek.format(),
-          this.authService.user.timeZone)
+          this.authService.user?.timeZone ?? 'UTC')
             .then((events) => {
               this.events = events;
               // Temporary to display raw results
@@ -155,24 +162,24 @@
     }
     ```
 
-Теперь это просто отрисовывает массив событий в JSON на странице. Сохраните изменения и перезапустите приложение. Войдите и щелкните ссылку **Календарь** на панели навигации. Если все работает, вы должны увидеть дамп событий JSON в календаре пользователя.
+Пока это только отрисовка массива событий в JSON на странице. Сохраните изменения и перезапустите приложение. Войдите и щелкните **ссылку Календарь** в панели nav. Если все работает надлежащим образом, в календаре пользователя должен появиться дамп событий в формате JSON.
 
 ## <a name="display-the-results"></a>Отображение результатов
 
-Теперь вы можете обновить `CalendarComponent` компонент, чтобы отображать события более удобным для пользователя способом.
+Теперь вы можете обновить компонент, чтобы отображать события более удобным `CalendarComponent` для пользователя образом.
 
-1. Удалите временный код, который добавляет оповещение из `ngOnInit` функции. Обновленная функция должна выглядеть так, как показано ниже.
+1. Удалите временный код, который добавляет оповещение из `ngOnInit` функции. Обновленная функция должна выглядеть так.
 
     :::code language="typescript" source="../demo/graph-tutorial/src/app/calendar/calendar.component.ts" id="ngOnInitSnippet":::
 
-1. Добавьте функцию в класс, `CalendarComponent` чтобы отформатировать `DateTimeTimeZone` объект в строку ISO.
+1. Добавьте функцию в `CalendarComponent` класс для формата `DateTimeTimeZone` объекта в строку ISO.
 
     :::code language="typescript" source="../demo/graph-tutorial/src/app/calendar/calendar.component.ts" id="formatDateTimeTimeZoneSnippet":::
 
-1. Откройте **./срк/апп/календар/calendar.component.html** и замените его содержимое приведенным ниже.
+1. Откройте **./src/app/calendar/calendar.component.html** и замените его содержимое следующим.
 
     :::code language="html" source="../demo/graph-tutorial/src/app/calendar/calendar.component.html" id="calendarHtml":::
 
-В результате получается цикл по коллекции событий и добавляется строка таблицы для каждой из них. Сохраните изменения и перезапустите приложение. Щелкните ссылку **Календарь** , после чего приложение должно отобразить таблицу событий.
+Это циклы через коллекцию событий и добавляет строку таблицы для каждого из них. Сохраните изменения и перезапустите приложение. Щелкните **ссылку Календарь,** и теперь приложение должно отрисовки таблицы событий.
 
 ![Снимок экрана с таблицей событий](./images/add-msgraph-01.png)
