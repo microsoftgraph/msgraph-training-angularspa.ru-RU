@@ -2,14 +2,14 @@
 
 В этом разделе вы создадим новый проект Angular.
 
-1. Откройте интерфейс командной строки (CLI), перейдите в каталог, в котором у вас есть права на создание файлов, и запустите следующие команды для установки инструмента [Angular CLI](https://www.npmjs.com/package/@angular/cli) и создания нового приложения Angular.
+1. Откройте интерфейс командной строки (CLI), перейдите в каталог, в котором у вас есть права на создание файлов, и запустите следующие команды, чтобы установить Angular [CLI](https://www.npmjs.com/package/@angular/cli) и создать новое Angular приложение.
 
     ```Shell
     npm install -g @angular/cli@11.2.9
     ng new graph-tutorial
     ```
 
-1. Angular CLI будет подсказок для получения дополнительных сведений. Ответьте на запросы следующим образом.
+1. Центр Angular запросит дополнительные сведения. Ответьте на запросы следующим образом.
 
     ```Shell
     ? Do you want to enforce stricter type checking and stricter bundle budgets in the workspace? Yes
@@ -33,7 +33,7 @@
 - [ng-bootstrap](https://github.com/ng-bootstrap/ng-bootstrap) для использования компонентов Bootstrap из Angular.
 - [время](https://github.com/moment/moment) форматирования дат и времени.
 - [Windows-iana](https://github.com/rubenillodo/windows-iana)
-- [msal-angular для](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/README.md) проверки подлинности в Azure Active Directory и получения маркеров доступа.
+- [msal-angular](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-angular/README.md) для проверки подлинности для Azure Active Directory и получения маркеров доступа.
 - [microsoft-graph-client](https://github.com/microsoftgraph/msgraph-sdk-javascript) для звонков в Microsoft Graph.
 
 1. Запустите следующие команды в CLI.
@@ -41,11 +41,11 @@
     ```Shell
     npm install bootstrap@4.6.0 @ng-bootstrap/ng-bootstrap@9.1.0
     npm install @azure/msal-browser@2.14.0 @azure/msal-angular@2.0.0-beta.4
-    npm install moment-timezone@0.5.33 windows-iana@5.0.1
+    npm install moment-timezone@0.5.33 windows-iana@5.0.2
     npm install @microsoft/microsoft-graph-client@2.2.1 @microsoft/microsoft-graph-types@1.35.0
     ```
 
-1. Запустите следующую команду в CLI, чтобы добавить пакет локализации Angular (необходимый ng-bootstrap).
+1. Запустите следующую команду в CLI, чтобы добавить пакет Angular локализации (требуется ng-bootstrap).
 
     ```Shell
     ng add @angular/localize
